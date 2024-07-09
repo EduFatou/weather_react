@@ -21,33 +21,33 @@ const WeatherCard = ({
 }) => {
   return <article>
     <div>
-    <h3>{dt_txt}</h3>
-    <p>
-      Average: {Math.round(temp)} Cº
-    </p>
-    <p>
-      Max. {Math.round(temp_max)} Cº
-    </p>
-    <p>
-      Min. {Math.round(temp_min)} Cº
-    </p>
-  </div>
-  <div>
-    <p>
-      General: {main}
-    </p>
-    <p>
-      Description: {description}
-    </p>
-  </div>
-  <div>
-    <p>
-      Wind Speed: {Math.round(speed)} Km/h
-    </p>
-    <p>
-      Wind Direction: {deg} º
-    </p>
-  </div>
+      <h3>{dt_txt}</h3>
+      <p>
+        Average: {Math.round(temp)} Cº
+      </p>
+      <p>
+        Max. {Math.round(temp_max)} Cº
+      </p>
+      <p>
+        Min. {Math.round(temp_min)} Cº
+      </p>
+    </div>
+    <div>
+      <p>
+        Sky: {main}
+      </p>
+      <p>
+        Description: {description}
+      </p>
+    </div>
+    <div>
+      <p>
+        Wind Speed: {Math.round(speed)} Km/h
+      </p>
+      <p>
+        Wind Direction: {deg} º
+      </p>
+    </div>
   </article>
 };
 

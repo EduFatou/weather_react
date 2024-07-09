@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import WeatherCard from './WeatherCard';
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
-const city = 'Seville';
+const city = 'seville';
 const apiKey = import.meta.env.VITE_SOME_VALUE;
-let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
+let url = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
 
 
 
 const WeatherList = () => {
 
-  const [value, setValue] = useState("Seville"); // Para guardar el dato a buscar
+  const [value, setValue] = useState("seville"); // Para guardar el dato a buscar
   const [info, setInfo] = useState([]); // Para guardar los posts
 
 
@@ -21,7 +21,6 @@ const WeatherList = () => {
         // Petición HTTP
         const res = await axios.get(url);
         const json = res.data.list;
-        console.log(json)
 
         // Guarda en el array de posts el resultado. Procesa los datos
         setInfo(json);
