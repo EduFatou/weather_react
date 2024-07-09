@@ -44,7 +44,7 @@ const WeatherCard = ({
         Feels like: {Math.round(feels_like)} Cº
       </p>
       <p>
-        Humidity {Math.round(humidity)} Cº
+        Humidity {Math.round(humidity)} %
       </p>
     </div>
     <div>
