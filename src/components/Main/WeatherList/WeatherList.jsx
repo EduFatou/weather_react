@@ -8,7 +8,7 @@ const WeatherList = () => {
 
   const apiKey = import.meta.env.VITE_SOME_VALUE;
 
-  const [value, setValue] = useState("Sevilla");// Para guardar el dato a buscar
+  const [value, setValue] = useState('');// Para guardar el dato a buscar
   const [info, setInfo] = useState([]); // Para guardar los posts
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
@@ -83,7 +83,7 @@ const WeatherList = () => {
   };
 
 
-  return <section className="topic">
+  return <section className="main-container">
     <h1>Forecast</h1>
     <form onSubmit={handleSubmit}>
       <input type="text" name="city" />

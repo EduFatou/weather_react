@@ -2,42 +2,57 @@ import React from "react";
 
 const WeatherCard = ({
   dataItem: {
-    dt_txt
+    dt_txt,
+    visibility
   },
   dataWeather: {
-    main,
-    description
+    description,
+    icon
   },
   dataTemp: {
     temp,
-    temp_min,
-    temp_max
+    feels_like,
+    humidity
   },
   dataWind: {
     speed,
-    deg
+    deg,
+    gust
   }
 
 }) => {
-  return <article>
+  const img_url = `http://openweathermap.org/img/w/${icon}.png`;
+  const getWindDirection = (deg) => {
+    if (deg > 337.5 || deg <= 22.5) return 'N';
+    if (deg > 22.5 && deg <= 67.5) return 'NE';
+    if (deg > 67.5 && deg <= 112.5) return 'E';
+    if (deg > 112.5 && deg <= 157.5) return 'SE';
+    if (deg > 157.5 && deg <= 202.5) return 'S';
+    if (deg > 202.5 && deg <= 247.5) return 'SW';
+    if (deg > 247.5 && deg <= 292.5) return 'W';
+    if (deg > 292.5 && deg <= 337.5) return 'NW';
+  };
+  
+  return <article className="article-container">
     <div>
       <h3>{dt_txt}</h3>
+      <img src={img_url} alt={description} />
       <p>
-        Average: {Math.round(temp)} Cº
+        Temp: {Math.round(temp)} Cº
       </p>
       <p>
-        Max. {Math.round(temp_max)} Cº
+        Feels like: {Math.round(feels_like)} Cº
       </p>
       <p>
-        Min. {Math.round(temp_min)} Cº
+        Humidity {Math.round(humidity)} Cº
       </p>
     </div>
     <div>
       <p>
-        Sky: {main}
+        Sky: {description}
       </p>
       <p>
-        Description: {description}
+        Visibility: {visibility/1000} km
       </p>
     </div>
     <div>
@@ -45,7 +60,10 @@ const WeatherCard = ({
         Wind Speed: {Math.round(speed)} Km/h
       </p>
       <p>
-        Wind Direction: {deg} º
+        Wind Direction: {getWindDirection(deg)}
+      </p>
+      <p>
+        Gusts: {Math.round(gust)} Km/h
       </p>
     </div>
   </article>
