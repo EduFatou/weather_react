@@ -64,6 +64,7 @@ h2 {
 article {
   background-color: rgba(255, 255, 255, 0.764);
   padding: 20px;
+  margin: 16px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

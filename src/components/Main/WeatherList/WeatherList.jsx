@@ -84,14 +84,13 @@ const WeatherList = () => {
 
 
   return <section className="main-container">
-    <h1>Forecast</h1>
     <form onSubmit={handleSubmit}>
       <input type="text" name="city" />
       <button>Search</button>
     </form>
     <button onClick={locationFound}>Use My Location</button>
     <h2>Weather in {value}</h2>
-    <h2>Upcoming days:</h2>
+    <h2>for the upcoming days:</h2>
     {info.length !== 0 ? renderCards() : <p>Loading...</p>}
   </section>
 };

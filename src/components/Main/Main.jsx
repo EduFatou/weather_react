@@ -3,7 +3,7 @@ import WeatherList from "./WeatherList/WeatherList";
 
 const Main = () => {
   return <div>
-    <h1>Weather React</h1>
+    <h1>Easy Forecast</h1>
     <WeatherList />
 
   </div>;
