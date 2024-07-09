@@ -3,7 +3,7 @@ import WeatherCard from './WeatherCard';
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
 const city = 'Seville';
-const apiKey = 'd28f01ba321f1a985fbd3e56ba3c0486';
+const apiKey = import.meta.env.VITE_SOME_VALUE;
 let url = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
 
 
