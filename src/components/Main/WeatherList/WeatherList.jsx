@@ -8,12 +8,12 @@ const WeatherList = () => {
 
   const apiKey = import.meta.env.VITE_SOME_VALUE;
 
-  const [value, setValue] = useState("Madrid");// Para guardar el dato a buscar
+  const [value, setValue] = useState("Sevilla");// Para guardar el dato a buscar
   const [info, setInfo] = useState([]); // Para guardar los posts
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
 
-  const locationFound = async () => {
+  const locationFound = () => {
 
     const success = (position) => {
       setLat(position.coords.latitude);
@@ -26,7 +26,6 @@ const WeatherList = () => {
         alert("Location is not available");
       }
     }
-
     navigator.geolocation.getCurrentPosition(success, errorResponse)
   }
 
@@ -35,7 +34,7 @@ const WeatherList = () => {
     async function fetchData() {
       try {
         // Petición HTTP
-        const res = await axios.get(`http://api.openweathermap.org/data/2.5/forecast?q=${value}&units=metric&appid=${apiKey}`);
+        const res = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${value}&units=metric&appid=${apiKey}`);
         const json = res.data.list;
 
         // Guarda en el array de posts el resultado. Procesa los datos
@@ -49,17 +48,18 @@ const WeatherList = () => {
   }, [value, apiKey]); // componentDidUpdate
 
   useEffect(() => {
-    async function fetchLocationName() {
+    async function fetchLocation() {
       try {
-        const res = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=5&appid=${apiKey}`);
+        const res = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=5&appid=${apiKey}`);
         setValue(res.data[0].name);
+    
       } catch (e) {
         console.error('Error fetching location name:', e);
       }
     }
 
     if (lat && long) {
-      fetchLocationName();
+      fetchLocation();
     }
   }, [lat, long, apiKey]);
 
