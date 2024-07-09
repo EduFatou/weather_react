@@ -4,7 +4,7 @@ import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
 const city = 'Seville';
 const apiKey = import.meta.env.VITE_SOME_VALUE;
-let url = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
+let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
 
 
 
