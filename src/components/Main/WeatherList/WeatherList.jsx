@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import WeatherCard from './WeatherCard';
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
+const apiKey = import.meta.env.VITE_SOME_VALUE;
+
 
 
 const WeatherList = () => {
-
-  const apiKey = import.meta.env.VITE_SOME_VALUE;
 
   const [value, setValue] = useState('');// Para guardar el dato a buscar
   const [info, setInfo] = useState([]); // Para guardar los posts
@@ -45,7 +45,7 @@ const WeatherList = () => {
     }
 
     fetchData();
-  }, [value, apiKey]); // componentDidUpdate
+  }, [value]); // componentDidUpdate. listener
 
   useEffect(() => {
     async function fetchLocation() {
@@ -61,7 +61,7 @@ const WeatherList = () => {
     if (lat && long) {
       fetchLocation();
     }
-  }, [lat, long, apiKey]);
+  }, [lat, long]);
 
   const renderCards = () => {
     return info.map((item, index) => (

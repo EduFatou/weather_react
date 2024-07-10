@@ -21,7 +21,7 @@ const WeatherCard = ({
   }
 
 }) => {
-  const img_url = `http://openweathermap.org/img/w/${icon}.png`;
+  const img_url = `http://openweathermap.org/img/wn/${icon}@2x.png`;
   const getWindDirection = (deg) => {
     if (deg > 337.5 || deg <= 22.5) return 'N';
     if (deg > 22.5 && deg <= 67.5) return 'NE';
@@ -38,10 +38,10 @@ const WeatherCard = ({
       <h3>{dt_txt}</h3>
       <img src={img_url} alt={description} />
       <p>
-        Temp: {Math.round(temp)} Cº
+        Temp: {Math.round(temp)} ºC
       </p>
       <p>
-        Feels like: {Math.round(feels_like)} Cº
+        Feels like: {Math.round(feels_like)} ºC
       </p>
       <p>
         Humidity {Math.round(humidity)} %
