@@ -162,17 +162,17 @@ const WeatherList = () => {
     };
 
     return (
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
+      <div className="">
+        <table className="weather-card">
           <thead>
             <tr>
-              <th className="px-4 py-2 bg-gray-100">Data</th>
+              <th className=""></th>
               {days.map(day => {
                 const { max, min } = getMaxMinTemp(groupedData[day]);
                 return (
-                  <th key={day} className="px-4 py-2 bg-gray-100">
-                    <div className="text-lg font-bold">{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
-                    <div className="text-xs">
+                  <th key={day} className="">
+                    <div className="">{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
+                    <div className="">
                       Max: {max}°C | Min: {min}°C
                     </div>
                   </th>
@@ -182,14 +182,14 @@ const WeatherList = () => {
           </thead>
           <tbody>
             <tr>
-              <td className="px-4 py-2">Sky Condition</td>
+              <td className="">Sky Condition</td>
               {days.map(day => (
-                <td key={day} className="px-4 py-2">
-                  <div className="flex flex-row justify-start space-x-2 overflow-x-auto">
+                <td key={day} className="">
+                  <div className="">
                     {groupedData[day].map((item, index) => (
-                      <div key={index} className="flex-shrink-0">
+                      <div key={index} className="">
                         {getWeatherIcon(item.weather[0].description, true)}
-                        <div className="text-xs">{formatTime(item.dt_txt)}</div>
+                        <div className="">{formatTime(item.dt_txt)}</div>
                       </div>
                     ))}
                   </div>
@@ -197,9 +197,9 @@ const WeatherList = () => {
               ))}
             </tr>
             <tr>
-              <td className="px-4 py-2">Temp/Humidity</td>
+              <td className="">Temp/Humidity</td>
               {days.map(day => (
-                <td key={day} className="px-4 py-2">
+                <td key={day} className="">
                   {renderCharts(groupedData[day])}
                 </td>
               ))}
@@ -217,13 +217,13 @@ const WeatherList = () => {
 
   return (
     <section className="main-container">
-      <form onSubmit={handleSubmit} className="mb-4">
-        <input type="text" name="city" className="p-2 border rounded" />
-        <button className="ml-2 p-2 bg-blue-500 text-white rounded">Search</button>
+      <form onSubmit={handleSubmit} className="">
+        <input type="text" name="city" className="" />
+        <button className="">Search</button>
       </form>
-      <button onClick={locationFound} className="mb-4 p-2 bg-green-500 text-white rounded">Use My Location</button>
-      <h2 className="text-2xl font-bold mb-4">Weather in {value}</h2>
-      <div className="overflow-x-auto">
+      <button onClick={locationFound} className="">Use My Location</button>
+      <h2 className="">Weather in {value}</h2>
+      <div className="">
         {info.length !== 0 ? renderWeatherTable() : <p>Loading...</p>}
       </div>
     </section>
