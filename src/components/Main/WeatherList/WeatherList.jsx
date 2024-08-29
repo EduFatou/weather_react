@@ -8,8 +8,8 @@ const apiKey = import.meta.env.VITE_SOME_VALUE;
 
 const WeatherList = () => {
 
-  const [value, setValue] = useState('');// Para guardar el dato a buscar
-  const [info, setInfo] = useState([]); // Para guardar los posts
+  const [value, setValue] = useState('');
+  const [info, setInfo] = useState([]);
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
 
@@ -33,17 +33,14 @@ const WeatherList = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Petición HTTP
         const res = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${value}&units=metric&appid=${apiKey}`);
         const json = res.data.list;
 
-        // Guarda en el array de posts el resultado. Procesa los datos
         setInfo(json);
       } catch (e) {
         setInfo([]) // No pintes nada 
       }
     }
-
     fetchData();
   }, [value]); // componentDidUpdate. listener
 
@@ -75,13 +72,11 @@ const WeatherList = () => {
     ));
   };
 
-
   const handleSubmit = e => {
     e.preventDefault();
     console.log(e.target.city.value)
     setValue(e.target.city.value) // Modificando el estado de Value
   };
-
 
   return <section className="main-container">
     <form onSubmit={handleSubmit}>
