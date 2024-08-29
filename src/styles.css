@@ -1,4 +1,10 @@
-/* General Styles */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -16,10 +22,6 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-}
-
-h1 {
-  text-align: center;
 }
 
 form {
@@ -55,33 +57,46 @@ h2 {
   margin: 20px 0;
 }
 
-.article-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-article {
-  background-color: rgba(255, 255, 255, 0.764);
+.weather-card {
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
   margin: 16px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-article h3 {
-  margin-top: 0;
-}
-
-article img {
-  max-width: 100%;
-  height: auto;
-}
-
-article div {
+.weather-icons {
+  display: flex;
+  justify-content: space-around;
   margin-bottom: 10px;
 }
 
-article p {
-  margin: 5px 0;
+.weather-icons img {
+  width: 50px;
+  height: 50px;
+}
+
+.chart-container {
+  margin-bottom: 20px;
+}
+
+.sky-condition {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    width: 95%;
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  input[type="text"] {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }
