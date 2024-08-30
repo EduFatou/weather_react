@@ -1,17 +1,15 @@
-/* #root {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-} */
-
-body {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+* {
   margin: 0;
   padding: 0;
-  color: #333;
+  box-sizing: border-box;
+  font-family: 'Roboto-light', sans-serif;
+}
+#root {
+  display: flex;
+  justify-content: center;
+}
+body {
+  text-align: center;
   background-image: url('/src/assets/background-seamless-pattern-vector-with-cute-fluffy-cloud_53876-116803.jpg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -20,15 +18,13 @@ body {
 
 .main-container {
   width: 90%;
-  max-width: 100vw;
-  margin: 0 auto;
-  padding: 20px;
+  justify-content: center;
 }
 
 form {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 20px;
 }
 
 input[type="text"] {
@@ -53,51 +49,43 @@ button:hover {
   background-color: #0056b3;
 }
 
-h2 {
+h1, h2 {
   text-align: center;
   margin: 20px 0;
 }
 
 .weather-card {
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
-  margin: 16px;
+  margin: 16px auto;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-.weather-icons {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 10px;
+.table-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.weather-icons img {
-  width: 50px;
-  height: 50px;
+.weather-table {
+  width: 100%;
+  min-width: 500px;
+  border-collapse: collapse;
+}
+
+.weather-table th,
+.weather-table td {
+  padding: 15px;
+  border: 1px solid #ddd;
 }
 
 .chart-container {
+  height: 200px;
   margin-bottom: 20px;
 }
 
-.sky-condition {
+.icons {
   display: flex;
+  flex-direction: row;
   justify-content: space-around;
-  margin-bottom: 20px;
-}
-
-@media (max-width: 768px) {
-  .main-container {
-    width: 95%;
-  }
-
-  form {
-    flex-direction: column;
-  }
-
-  input[type="text"] {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
 }

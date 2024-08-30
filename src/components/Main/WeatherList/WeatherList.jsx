@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { WiDaySunny, WiDayCloudy, WiNightClear, WiNightCloudy, WiRain } from "react-icons/wi";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
@@ -85,6 +84,17 @@ const WeatherList = () => {
     return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const getWindDirection = (deg) => {
+    if (deg > 337.5 || deg <= 22.5) return 'N';
+    if (deg > 22.5 && deg <= 67.5) return 'NE';
+    if (deg > 67.5 && deg <= 112.5) return 'E';
+    if (deg > 112.5 && deg <= 157.5) return 'SE';
+    if (deg > 157.5 && deg <= 202.5) return 'S';
+    if (deg > 202.5 && deg <= 247.5) return 'SW';
+    if (deg > 247.5 && deg <= 292.5) return 'W';
+    if (deg > 292.5 && deg <= 337.5) return 'NW';
+  };
+
   const renderWeatherTable = () => {
     const groupedData = groupByDay(info);
     const days = Object.keys(groupedData);
@@ -97,8 +107,8 @@ const WeatherList = () => {
       };
     };
 
-    const renderCharts = (dayData) => {
-      const tempHumidityChartData = {
+    const renderTempHumidityChart = (dayData) => {
+      const chartData = {
         labels: dayData.map(item => formatTime(item.dt_txt)),
         datasets: [
           {
@@ -116,18 +126,50 @@ const WeatherList = () => {
         ],
       };
 
-      const windChartData = {
+      const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              afterBody: function(context) {
+                const dataIndex = context[0].dataIndex;
+                const feelsLike = dayData[dataIndex].main.feels_like;
+                return `Feels like: ${feelsLike.toFixed(1)}°C`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      };
+
+      return (
+        <div className="chart-container" style={{height: '200px'}}>
+          <Line data={chartData} options={chartOptions} />
+        </div>
+      );
+    };
+
+    const renderWindChart = (dayData) => {
+      const chartData = {
         labels: dayData.map(item => formatTime(item.dt_txt)),
         datasets: [
           {
             label: 'Wind Speed',
-            data: dayData.map(item => item.wind.speed),
+            data: dayData.map(item => item.wind.speed * 3.6),
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.5)',
           },
           {
             label: 'Wind Gust',
-            data: dayData.map(item => item.wind.gust),
+            data: dayData.map(item => item.wind.gust * 3.6),
             borderColor: 'rgb(255, 159, 64)',
             backgroundColor: 'rgba(255, 159, 64, 0.5)',
           },
@@ -141,6 +183,15 @@ const WeatherList = () => {
           legend: {
             display: false,
           },
+          tooltip: {
+            callbacks: {
+              afterBody: function(context) {
+                const dataIndex = context[0].dataIndex;
+                const windDirection = getWindDirection(dayData[dataIndex].wind.deg);
+                return `Wind Direction: ${windDirection}`;
+              },
+            }
+          }
         },
         scales: {
           y: {
@@ -150,65 +201,70 @@ const WeatherList = () => {
       };
 
       return (
-        <>
-          <div className="chart-container" style={{height: '200px'}}>
-            <Line data={tempHumidityChartData} options={chartOptions} />
-          </div>
-          <div className="chart-container" style={{height: '200px'}}>
-            <Line data={windChartData} options={chartOptions} />
-          </div>
-        </>
+        <div className="chart-container" style={{height: '200px'}}>
+          <Line data={chartData} options={chartOptions} />
+        </div>
       );
     };
 
     return (
-      <div className="">
-        <table className="weather-card">
-          <thead>
-            <tr>
-              <th className=""></th>
-              {days.map(day => {
-                const { max, min } = getMaxMinTemp(groupedData[day]);
-                return (
-                  <th key={day} className="">
-                    <div className="">{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
-                    <div className="">
-                      Max: {max}°C | Min: {min}°C
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="">Sky Condition</td>
-              {days.map(day => (
-                <td key={day} className="">
-                  <div className="">
-                    {groupedData[day].map((item, index) => (
-                      <div key={index} className="">
-                        {getWeatherIcon(item.weather[0].description, true)}
-                        <div className="">{formatTime(item.dt_txt)}</div>
+      <div className="weather-card">
+        <div className="table-container">
+          <table className="weather-table">
+            <thead>
+              <tr>
+                <th></th>
+                {days.map(day => {
+                  const { max, min } = getMaxMinTemp(groupedData[day]);
+                  return (
+                    <th key={day}>
+                      <div>{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
+                      <div>
+                        Max: {max}°C | Min: {min}°C
                       </div>
-                    ))}
-                  </div>
-                </td>
-              ))}
-            </tr>
-            <tr>
-              <td className="">Temp/Humidity</td>
-              {days.map(day => (
-                <td key={day} className="">
-                  {renderCharts(groupedData[day])}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sky Conditions</td>
+                {days.map(day => (
+                  <td key={day}>
+                    <div className="icons">
+                      {groupedData[day].map((item, index) => (
+                        <div key={index}>
+                          {getWeatherIcon(item.weather[0].description, true)}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td>Temp/Humidity</td>
+                {days.map(day => (
+                  <td key={day}>
+                    {renderTempHumidityChart(groupedData[day])}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td>Wind</td>
+                {days.map(day => (
+                  <td key={day}>
+                    {renderWindChart(groupedData[day])}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };
+
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -217,15 +273,14 @@ const WeatherList = () => {
 
   return (
     <section className="main-container">
-      <form onSubmit={handleSubmit} className="">
-        <input type="text" name="city" className="" />
-        <button className="">Search</button>
+      <h1>Easy Forecast</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="city" />
+        <button>Search</button>
       </form>
-      <button onClick={locationFound} className="">Use My Location</button>
-      <h2 className="">Weather in {value}</h2>
-      <div className="">
+      <button onClick={locationFound}>Use My Location</button>
+      <h2>Weather in {value}</h2>
         {info.length !== 0 ? renderWeatherTable() : <p>Loading...</p>}
-      </div>
     </section>
   );
 };
