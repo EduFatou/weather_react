@@ -148,7 +148,7 @@ const WeatherList = () => {
           },
           tooltip: {
             callbacks: {
-              afterBody: function(context) {
+              afterBody: function (context) {
                 const dataIndex = context[0].dataIndex;
                 const feelsLike = dayData[dataIndex].main.feels_like;
                 return `Feels like: ${feelsLike.toFixed(1)}°C`;
@@ -157,8 +157,17 @@ const WeatherList = () => {
           }
         },
         scales: {
+          x: {
+            grid: {
+                display: false
+            }
+        },
           y: {
-            beginAtZero: true
+            grid: {
+              display: false
+          },
+            min: 0,
+            max: 100
           }
         }
       };
@@ -202,7 +211,7 @@ const WeatherList = () => {
           },
           tooltip: {
             callbacks: {
-              afterBody: function(context) {
+              afterBody: function (context) {
                 const dataIndex = context[0].dataIndex;
                 const windDirection = getWindDirection(dayData[dataIndex].wind.deg);
                 return `Wind Direction: ${windDirection}`;
@@ -211,8 +220,17 @@ const WeatherList = () => {
           }
         },
         scales: {
+          x: {
+            grid: {
+                display: false
+            }
+        },
           y: {
-            beginAtZero: true
+            grid: {
+              display: false
+          },
+            min: 0,
+            max: 100
           }
         }
       };
@@ -306,16 +324,16 @@ const WeatherList = () => {
     <section className="main-container">
       <h1>Easy Forecast</h1>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="city" placeholder='Escribe la ubicación'/>
+        <input type="text" name="city" placeholder='Escribe la ubicación' />
         <button>Buscar</button>
       </form>
       <button onClick={locationFound}>Usar mi ubicación</button>
       {info.length !== 0 && (
-      <>
-        <h2>El tiempo en {value}</h2>
-        {renderWeatherTable()}
-      </>
-    )}
+        <>
+          <h2>El tiempo en {value}</h2>
+          {renderWeatherTable()}
+        </>
+      )}
     </section>
   );
 };
