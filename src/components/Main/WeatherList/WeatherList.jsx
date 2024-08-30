@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { WiDaySunny, WiDayCloudy, WiNightClear, WiNightCloudy, WiRain } from "react-icons/wi";
+import { FaLongArrowAltUp } from "react-icons/fa";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -95,6 +96,14 @@ const WeatherList = () => {
     if (deg > 292.5 && deg <= 337.5) return 'NW';
   };
 
+  const WindDirectionArrow = ({ degree }) => {
+    return (
+      <div style={{ transform: `rotate(${degree}deg)`, display: 'inline-block' }}>
+        <FaLongArrowAltUp size={20} />
+      </div>
+    );
+  };
+
   const renderWeatherTable = () => {
     const groupedData = groupByDay(info);
     const days = Object.keys(groupedData);
@@ -116,12 +125,16 @@ const WeatherList = () => {
             data: dayData.map(item => item.main.temp),
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            tension: 0.4,
+            pointStyle: false
           },
           {
             label: 'Humidity',
             data: dayData.map(item => item.main.humidity),
             borderColor: 'rgb(53, 162, 235)',
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            tension: 0.4,
+            pointStyle: false
           },
         ],
       };
@@ -151,7 +164,7 @@ const WeatherList = () => {
       };
 
       return (
-        <div className="chart-container" style={{height: '200px'}}>
+        <div className="chart-container">
           <Line data={chartData} options={chartOptions} />
         </div>
       );
@@ -166,12 +179,16 @@ const WeatherList = () => {
             data: dayData.map(item => item.wind.speed * 3.6),
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            tension: 0.4,
+            pointStyle: false
           },
           {
             label: 'Wind Gust',
             data: dayData.map(item => item.wind.gust * 3.6),
             borderColor: 'rgb(255, 159, 64)',
             backgroundColor: 'rgba(255, 159, 64, 0.5)',
+            tension: 0.4,
+            pointStyle: false
           },
         ],
       };
@@ -201,7 +218,7 @@ const WeatherList = () => {
       };
 
       return (
-        <div className="chart-container" style={{height: '200px'}}>
+        <div className="chart-container">
           <Line data={chartData} options={chartOptions} />
         </div>
       );
@@ -229,7 +246,7 @@ const WeatherList = () => {
             </thead>
             <tbody>
               <tr>
-                <td>Sky Conditions</td>
+                <td>Nubosidad</td>
                 {days.map(day => (
                   <td key={day}>
                     <div className="icons">
@@ -243,7 +260,7 @@ const WeatherList = () => {
                 ))}
               </tr>
               <tr>
-                <td>Temp/Humidity</td>
+                <td><p className='temp'>Temperatura</p>y<p className='humidity'>Humedad</p></td>
                 {days.map(day => (
                   <td key={day}>
                     {renderTempHumidityChart(groupedData[day])}
@@ -251,10 +268,24 @@ const WeatherList = () => {
                 ))}
               </tr>
               <tr>
-                <td>Wind</td>
+                <td><p className='wind'>Viento</p>y<p className='gust'>Rachas</p></td>
                 {days.map(day => (
                   <td key={day}>
                     {renderWindChart(groupedData[day])}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td>Dirección</td>
+                {days.map(day => (
+                  <td key={day}>
+                    <div className="wind-direction-icons">
+                      {groupedData[day].map((item, index) => (
+                        <div key={index} title={getWindDirection(item.wind.deg)}>
+                          <WindDirectionArrow degree={item.wind.deg} />
+                        </div>
+                      ))}
+                    </div>
                   </td>
                 ))}
               </tr>
@@ -275,12 +306,16 @@ const WeatherList = () => {
     <section className="main-container">
       <h1>Easy Forecast</h1>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="city" />
-        <button>Search</button>
+        <input type="text" name="city" placeholder='Escribe la ubicación'/>
+        <button>Buscar</button>
       </form>
-      <button onClick={locationFound}>Use My Location</button>
-      <h2>Weather in {value}</h2>
-        {info.length !== 0 ? renderWeatherTable() : <p>Loading...</p>}
+      <button onClick={locationFound}>Usar mi ubicación</button>
+      {info.length !== 0 && (
+      <>
+        <h2>El tiempo en {value}</h2>
+        {renderWeatherTable()}
+      </>
+    )}
     </section>
   );
 };

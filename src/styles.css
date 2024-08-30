@@ -75,12 +75,28 @@ h1, h2 {
 
 .weather-table th,
 .weather-table td {
-  padding: 15px;
+  padding: 5px;
   border: 1px solid #ddd;
+}
+.temp {
+  color: rgb(255, 99, 132);
+}
+
+.humidity {
+  color: rgb(53, 162, 235);
+}
+
+.wind {
+color: rgb(75, 192, 192);
+}
+
+.gust {
+color: rgb(255, 159, 64);
 }
 
 .chart-container {
-  height: 200px;
+  height: 150px;
+  width: auto;
   margin-bottom: 20px;
 }
 
@@ -88,4 +104,14 @@ h1, h2 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.wind-direction-icons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.wind-direction-icons > div {
+  padding: 5px;
 }
