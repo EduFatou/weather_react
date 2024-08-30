@@ -1,6 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { WiDaySunny, WiDayCloudy, WiNightClear, WiNightCloudy, WiRain } from "react-icons/wi";
+import {
+  WiThunderstorm,
+  WiSprinkle,
+  WiRain,
+  WiSnow,
+  WiFog,
+  WiDaySunny,
+  WiNightClear,
+  WiCloud,
+  WiCloudy,
+  WiDust,
+  WiHurricane,
+  WiSnowflakeCold,
+  WiRainMix,
+  WiDayHaze,
+  WiSmoke,
+  WiDayCloudy,
+  WiNightAltCloudy,
+  WiDayRain,
+  WiRainWind,
+  WiShowers,
+  WiDayShowers,
+  WiRaindrops,
+  WiNightCloudy,
+  WiNightRain,
+  WiNightShowers,
+  WiNightAltRain,
+  WiNightAltSprinkle,
+  WiNa
+} from "react-icons/wi";
 import { FaLongArrowAltUp } from "react-icons/fa";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
@@ -70,13 +99,58 @@ const WeatherList = () => {
     }, {});
   };
 
-  const getWeatherIcon = (description, isDay) => {
-    if (description.includes("clear")) {
-      return isDay ? <WiDaySunny size={30} /> : <WiNightClear size={30} />;
-    } else if (description.includes("cloud")) {
-      return isDay ? <WiDayCloudy size={30} /> : <WiNightCloudy size={30} />;
-    } else {
-      return <WiRain size={30} />;
+  const getWeatherIcon = (id, isDay) => {
+    switch (true) {
+      // Group 2xx: Thunderstorm
+      case id >= 200 && id < 300:
+        return <WiThunderstorm />;
+      
+      // Group 3xx: Drizzle
+      case id >= 300 && id < 400:
+        return <WiSprinkle />;
+      
+      // Group 5xx: Rain
+      case id >= 500 && id < 600:
+        return id === 511 ? <WiSnowflakeCold /> : <WiRain />;
+      
+      // Group 6xx: Snow
+      case id >= 600 && id < 700:
+        return id === 611 || id === 612 || id === 613 ? <WiRainMix /> : <WiSnow />;
+      
+      // Group 7xx: Atmosphere
+      case id === 701:
+        return <WiFog />;
+      case id === 711:
+        return <WiSmoke />;
+      case id === 721:
+        return <WiDayHaze />;
+      case id === 731:
+      case id === 751:
+      case id === 761:
+        return <WiDust />;
+      case id === 741:
+        return <WiFog />;
+      case id === 762:
+        return <WiDust />;
+      case id === 771:
+      case id === 781:
+        return <WiHurricane />;
+      
+      // Group 800: Clear
+      case id === 800:
+        return isDay ? <WiDaySunny /> : <WiNightClear />;
+      
+      // Group 80x: Clouds
+      case id === 801:
+        return isDay ? <WiDayCloudy /> : <WiNightAltCloudy />;
+      case id === 802:
+        return <WiCloud />;
+      case id > 802 && id <= 804:
+        return <WiCloudy />;
+      
+      // Default case
+      default:
+        return <WiNa />;
     }
   };
 
@@ -270,7 +344,7 @@ const WeatherList = () => {
                     <div className="icons">
                       {groupedData[day].map((item, index) => (
                         <div key={index}>
-                          {getWeatherIcon(item.weather[0].description, true)}
+                          {getWeatherIcon(item.weather[0].id, true)}
                         </div>
                       ))}
                     </div>
