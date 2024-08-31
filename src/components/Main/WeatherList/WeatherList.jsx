@@ -227,17 +227,31 @@ const WeatherList = () => {
   };
 
   const WindDirectionArrow = ({ degree }) => {
+    const adjustedDegree = (degree + 180) % 360;
     return (
-      <div style={{ transform: `rotate(${degree}deg)`, display: 'inline-block' }}>
+      <div style={{ transform: `rotate(${adjustedDegree}deg)`, display: 'inline-block' }}>
         <FaLongArrowAltUp size={20} />
       </div>
     );
   };
 
-  const renderCurrentWeather = () => {
-    if (!currentWeather) return null;
+  const getRainInfo = (forecastData) => {
+    const nextRainData = forecastData.filter(item => item.rain && item.rain['3h']);
+    if (nextRainData.length > 0) {
+      const rainInfo = nextRainData.map(item => ({
+        time: new Date(item.dt * 1000).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        amount: item.rain['3h']
+      }));
+      return rainInfo.map(info => `${info.time}: ${info.amount} mm`).join(', ');
+    }
+    return "No se espera lluvia en las próximas horas";
+  };
 
-    const { name, main, wind, weather } = currentWeather;
+
+  const renderCurrentWeather = () => {
+    if (!currentWeather || info.length === 0) return null;
+
+    const { name, main, wind, weather, clouds } = currentWeather;
     const isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
 
     return (
@@ -248,13 +262,21 @@ const WeatherList = () => {
             {getWeatherIcon(weather[0].id, isDay)}
           </div>
           <p className="current-temp">{main.temp.toFixed(1)}°C</p>
-          <p className="current-wind">Viento: {(wind.speed * 3.6).toFixed(1)} km/h</p>
+          <p className="feels-like">Sensación térmica: {main.feels_like.toFixed(1)}°C</p>
+          <p className="current-wind">
+            Viento: {(wind.speed * 3.6).toFixed(1)} km/h
+            <span className="wind-direction">
+              {getWindDirection(wind.deg)} <WindDirectionArrow degree={wind.deg} />
+            </span>
+          </p>
         </div>
         <div className="right-section">
           <p className="weather-description">{weather[0].description}</p>
-          <p className="temp-range">
+          <p className="cloudiness">Nubosidad: {clouds.all}%</p>
+          <p className="rain-info">Lluvia: {getRainInfo(info)}</p>
+          {/* <p className="temp-range">
             Máx: {main.temp_max.toFixed(1)}°C | Mín: {main.temp_min.toFixed(1)}°C
-          </p>
+          </p> */}
         </div>
       </div>
     );
@@ -486,8 +508,8 @@ const WeatherList = () => {
       <button onClick={locationFound}>Usar mi ubicación</button>
       {info.length !== 0 && (
         <>
-          <h2>El tiempo en {value}, a 5 días:</h2>
           {renderCurrentWeather()}
+          <h2>El tiempo en {value}, a 5 días:</h2>
           {renderWeatherTable()}
         </>
       )}
