@@ -271,7 +271,7 @@ const WeatherList = () => {
           </p>
         </div>
         <div className="right-section">
-          <p className="weather-description">{weather[0].description}</p>
+          <p className="weather-description">{weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}</p>
           <p className="cloudiness">Nubosidad: {clouds.all}%</p>
           <p className="rain-info">Lluvia: {getRainInfo(info)}</p>
           {/* <p className="temp-range">
