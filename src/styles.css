@@ -115,3 +115,37 @@ color: rgb(255, 159, 64);
 .wind-direction-icons > div {
   padding: 5px;
 }
+
+.current-weather {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color:  rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.left-section, .right-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.weather-icon {
+  font-size: 4rem;
+}
+
+.current-temp {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.weather-description {
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.temp-range {
+  font-size: 1.2rem;
+}

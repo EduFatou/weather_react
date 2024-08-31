@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
+  WiHail,
+  WiStormShowers,
   WiThunderstorm,
   WiSprinkle,
   WiRain,
@@ -28,7 +30,8 @@ import {
   WiNightShowers,
   WiNightAltRain,
   WiNightAltSprinkle,
-  WiNa
+  WiNa,
+  WiSleet
 } from "react-icons/wi";
 import { FaLongArrowAltUp } from "react-icons/fa";
 import { Line } from 'react-chartjs-2';
@@ -41,6 +44,7 @@ const apiKey = import.meta.env.VITE_SOME_VALUE;
 const WeatherList = () => {
   const [value, setValue] = useState('');
   const [info, setInfo] = useState([]);
+  const [currentWeather, setCurrentWeather] = useState(null);
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
 
@@ -62,11 +66,13 @@ const WeatherList = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${value}&units=metric&appid=${apiKey}`);
-        const json = res.data.list;
-        setInfo(json);
+        const forecastRes = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${value}&units=metric&appid=${apiKey}&lang=es`);
+        const currentRes = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${value}&units=metric&appid=${apiKey}&lang=es`);
+        setInfo(forecastRes.data.list);
+        setCurrentWeather(currentRes.data);
       } catch (e) {
-        setInfo([])
+        setInfo([]);
+        setCurrentWeather(null);
       }
     }
     if (value) {
@@ -77,7 +83,7 @@ const WeatherList = () => {
   useEffect(() => {
     async function fetchLocation() {
       try {
-        const res = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=5&appid=${apiKey}`);
+        const res = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=5&appid=${apiKey}&lang=es`);
         setValue(res.data[0].name);
       } catch (e) {
         console.error('Error fetching location name:', e);
@@ -102,23 +108,67 @@ const WeatherList = () => {
   const getWeatherIcon = (id, isDay) => {
     switch (true) {
       // Group 2xx: Thunderstorm
-      case id >= 200 && id < 300:
+      case id >= 200 && id < 210:
         return <WiThunderstorm />;
+      case id >= 210 && id < 220:
+        return <WiLightning />;
+      case id >= 220 && id < 300:
+        return <WiStormShowers />;
       
       // Group 3xx: Drizzle
-      case id >= 300 && id < 400:
+      case id === 300: 
         return <WiSprinkle />;
+      case id === 301:
+        return <WiSprinkle />;
+      case id === 302:
+        return <WiRainMix />;
+      case id === 310:
+        return isDay ? <WiDayShowers /> : <WiNightAltSprinkle />;
+      case id === 311:
+        return <WiRainMix />;
+      case id === 312:
+        return <WiRainWind />;
+      case id === 313:
+        return <WiShowers />;
+      case id === 314:
+        return <WiRainWind />;
+      case id === 321:
+        return <WiShowers />;
       
       // Group 5xx: Rain
-      case id >= 500 && id < 600:
-        return id === 511 ? <WiSnowflakeCold /> : <WiRain />;
+      case id === 500:
+        return isDay ? <WiDayRain /> : <WiNightRain />;
+      case id === 501:
+      case id === 520:
+        return <WiRain />;
+      case id === 502:
+      case id === 503:
+      case id === 504:
+      case id === 521:
+      case id === 522:
+      case id === 531:
+        return <WiRainWind />;
+      case id === 511:
+        return <WiSnowflakeCold />;
       
       // Group 6xx: Snow
-      case id >= 600 && id < 700:
-        return id === 611 || id === 612 || id === 613 ? <WiRainMix /> : <WiSnow />;
+      case id === 600:
+      case id === 601:
+      case id === 602:
+        return <WiSnow />;
+      case id === 611:
+      case id === 612:
+      case id === 613:
+      case id === 615:
+      case id === 616:
+      case id === 620:
+      case id === 621:
+      case id === 622:
+        return <WiRainMix />;
       
       // Group 7xx: Atmosphere
       case id === 701:
+      case id === 741:
         return <WiFog />;
       case id === 711:
         return <WiSmoke />;
@@ -127,12 +177,10 @@ const WeatherList = () => {
       case id === 731:
       case id === 751:
       case id === 761:
-        return <WiDust />;
-      case id === 741:
-        return <WiFog />;
       case id === 762:
         return <WiDust />;
       case id === 771:
+        return <WiWindy />;
       case id === 781:
         return <WiHurricane />;
       
@@ -145,8 +193,16 @@ const WeatherList = () => {
         return isDay ? <WiDayCloudy /> : <WiNightAltCloudy />;
       case id === 802:
         return <WiCloud />;
-      case id > 802 && id <= 804:
+      case id === 803:
+        return isDay ? <WiCloudy /> : <WiNightCloudy />;
+      case id === 804:
         return <WiCloudy />;
+      
+      // Special cases
+      case id === 906:
+        return <WiHail />;
+      case id === 957:
+        return <WiRaindrops />;
       
       // Default case
       default:
@@ -174,6 +230,32 @@ const WeatherList = () => {
     return (
       <div style={{ transform: `rotate(${degree}deg)`, display: 'inline-block' }}>
         <FaLongArrowAltUp size={20} />
+      </div>
+    );
+  };
+
+  const renderCurrentWeather = () => {
+    if (!currentWeather) return null;
+
+    const { name, main, wind, weather } = currentWeather;
+    const isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
+
+    return (
+      <div className="current-weather">
+        <div className="left-section">
+          <h2>{name}</h2>
+          <div className="weather-icon">
+            {getWeatherIcon(weather[0].id, isDay)}
+          </div>
+          <p className="current-temp">{main.temp.toFixed(1)}°C</p>
+          <p className="current-wind">Viento: {(wind.speed * 3.6).toFixed(1)} km/h</p>
+        </div>
+        <div className="right-section">
+          <p className="weather-description">{weather[0].description}</p>
+          <p className="temp-range">
+            Máx: {main.temp_max.toFixed(1)}°C | Mín: {main.temp_min.toFixed(1)}°C
+          </p>
+        </div>
       </div>
     );
   };
@@ -404,7 +486,8 @@ const WeatherList = () => {
       <button onClick={locationFound}>Usar mi ubicación</button>
       {info.length !== 0 && (
         <>
-          <h2>El tiempo en {value}</h2>
+          <h2>El tiempo en {value}, a 5 días:</h2>
+          {renderCurrentWeather()}
           {renderWeatherTable()}
         </>
       )}
