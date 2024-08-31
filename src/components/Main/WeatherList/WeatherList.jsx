@@ -445,9 +445,9 @@ const WeatherList = () => {
                 <td>Nubosidad</td>
                 {days.map(day => (
                   <td key={day}>
-                    <div className="icons">
+                    <div className="sky-conditions-container">
                       {groupedData[day].map((item, index) => (
-                        <div key={index}>
+                        <div className='sky-condition-icon' key={index}>
                           {getWeatherIcon(item.weather[0].id, true)}
                         </div>
                       ))}
