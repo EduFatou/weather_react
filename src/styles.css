@@ -95,9 +95,9 @@ color: rgb(255, 159, 64);
 }
 
 .chart-container {
-  height: 150px;
-  width: auto;
-  margin-bottom: 20px;
+  height: auto;
+  /* width: auto; */
+  margin-bottom: 5px;
 }
 
 .sky-conditions-container {
@@ -107,16 +107,25 @@ color: rgb(255, 159, 64);
 }
 
 .sky-condition-icon {
-  height: 60px;
+  height: 80px;
   font-size: 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+  margin-bottom: -10px;
+}
+
+.icon-temp {
+  position: absolute;
+  top: 0;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
 .icon-hour {
-  margin-top: 5px;
+  /* margin-top: 5px; */
   font-size: 0.8rem;
 }
 
@@ -157,7 +166,7 @@ color: rgb(255, 159, 64);
 .current-temp {
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 0;
+  margin-bottom: 10px;
 }
 
 .feels-like {
