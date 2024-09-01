@@ -36,6 +36,12 @@ import {
 import { FaLongArrowAltUp } from "react-icons/fa";
 import { Line, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } from 'chart.js';
+import clearDay from '../../../assets/clearDay.jpg';
+import clearNight from '../../../assets/clearNight.jpg';
+import clearSunset from '../../../assets/clearSunset.mp4';
+import rainyDay from '../../../assets/RainyDay2.jpg';
+import someCloudsDay from '../../../assets/someCloudsDay.jpg';
+import stormDay from '../../../assets/stormDay.jpg';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
@@ -47,6 +53,8 @@ const WeatherList = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
+  const [background, setBackground] = useState(null);
+  const isDay = new Date().getHours() >= 6 && new Date().getHours() < 20;
 
   const locationFound = () => {
     const success = (position) => {
@@ -70,9 +78,11 @@ const WeatherList = () => {
         const currentRes = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${value}&units=metric&appid=${apiKey}&lang=es`);
         setInfo(forecastRes.data.list);
         setCurrentWeather(currentRes.data);
+        updateBackground(currentRes.data);
       } catch (e) {
         setInfo([]);
         setCurrentWeather(null);
+        document.body.style.backgroundImage = '';
       }
     }
     if (value) {
@@ -94,6 +104,36 @@ const WeatherList = () => {
     }
   }, [lat, long]);
 
+  const updateBackground = (currentWeather) => {
+    const isDay = new Date().getHours() >= 6 && new Date().getHours() < 20;
+    const weatherId = currentWeather.weather[0].id;
+    const sunsetTime = new Date(currentWeather.sys.sunset * 1000);
+    console.log(sunsetTime)
+    const isSunset = Math.abs(new Date() - sunsetTime) < 30 * 60 * 1000;
+    let newBackground = clearDay; // Fondo por defecto
+
+    // Ajusta el fondo según el clima y si es de día o de noche
+    if (weatherId >= 200 && weatherId < 600) {
+      newBackground = rainyDay;
+    } else if (weatherId >= 600 && weatherId < 700) {
+      newBackground = isDay ? someCloudsDay : clearNight;
+    } else if (weatherId >= 700 && weatherId < 800) {
+      newBackground = stormDay;
+    } else if (weatherId === 800) {
+      newBackground = isDay ? clearDay : clearNight;
+    } else if (weatherId > 800) {
+      newBackground = isDay ? someCloudsDay : clearNight;
+    }
+    if (isSunset && isDay) {
+      newBackground = '/src/assets/clearSunset.mp4'; // Set to your video
+    }
+
+    document.body.style.backgroundImage = `url(${newBackground})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.minHeight = '100vh';
+  };
+  
   const groupByDay = (data) => {
     return data.reduce((acc, item) => {
       const date = new Date(item.dt_txt).toDateString();
@@ -309,7 +349,7 @@ const WeatherList = () => {
     if (!currentWeather || info.length === 0) return null;
 
     const { name, main, wind, weather, clouds } = currentWeather;
-    const isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
+    const isDay = new Date().getHours() >= 6 && new Date().getHours() < 20;
     const rainData = getRainInfo(info);
 
     return (
@@ -341,6 +381,7 @@ const WeatherList = () => {
   const renderWeatherTable = () => {
     const groupedData = groupByDay(info);
     const days = Object.keys(groupedData);
+    const validDays = days.filter(day => groupedData[day].length > 1);
 
     const getMaxMinTemp = (dayData) => {
       const temps = dayData.map(item => item.main.temp);
@@ -362,14 +403,14 @@ const WeatherList = () => {
             tension: 0.4,
             pointStyle: false
           },
-          {
-            label: 'Humidity',
-            data: dayData.map(item => item.main.humidity),
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            tension: 0.4,
-            pointStyle: false
-          },
+          // {
+          //   label: 'Humidity',
+          //   data: dayData.map(item => item.main.humidity),
+          //   borderColor: 'rgb(53, 162, 235)',
+          //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          //   tension: 0.4,
+          //   pointStyle: false
+          // },
         ],
       };
 
@@ -399,9 +440,7 @@ const WeatherList = () => {
           y: {
             grid: {
               display: false
-            },
-            min: 0,
-            max: 50
+            }
           }
         }
       };
@@ -464,7 +503,7 @@ const WeatherList = () => {
               display: false
             },
             min: 0,
-            max: 100
+            max: 50
           }
         }
       };
@@ -483,7 +522,7 @@ const WeatherList = () => {
             <thead>
               <tr>
                 <th></th>
-                {days.map(day => {
+                {validDays.map(day => {
                   const { max, min } = getMaxMinTemp(groupedData[day]);
                   return (
                     <th key={day}>
@@ -499,7 +538,7 @@ const WeatherList = () => {
             <tbody>
               <tr>
                 <td>Nubosidad</td>
-                {days.map(day => (
+                {validDays.map(day => (
                   <td key={day}>
                     <div className="sky-conditions-container">
                       {groupedData[day].map((item, index) => (
@@ -514,8 +553,8 @@ const WeatherList = () => {
                 ))}
               </tr>
               <tr>
-                <td><p className='temp'>Temperatura</p>y<p className='humidity'>Humedad</p></td>
-                {days.map(day => (
+                <td><p className='temp'>Temperatura</p>°C{/*y <p className='humidity'>Humedad</p>*/}</td>
+                {validDays.map(day => (
                   <td key={day}>
                     {renderTempHumidityChart(groupedData[day])}
                   </td>
@@ -523,7 +562,7 @@ const WeatherList = () => {
               </tr>
               <tr>
                 <td><p className='wind'>Viento</p>y<p className='gust'>Rachas</p></td>
-                {days.map(day => (
+                {validDays.map(day => (
                   <td key={day}>
                     {renderWindChart(groupedData[day])}
                   </td>
@@ -531,7 +570,7 @@ const WeatherList = () => {
               </tr>
               <tr>
                 <td>Dirección</td>
-                {days.map(day => (
+                {validDays.map(day => (
                   <td key={day}>
                     <div className="wind-direction-icons">
                       {groupedData[day].map((item, index) => (
@@ -558,7 +597,7 @@ const WeatherList = () => {
 
   return (
     <section className="main-container">
-      <h1>Easy Forecast</h1>
+      <h1 style={{ color: isDay ? 'black' : 'white' }}>Easy Forecast</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" name="city" placeholder='Escribe la ubicación' />
         <button>Buscar</button>
@@ -567,7 +606,7 @@ const WeatherList = () => {
       {info.length !== 0 && (
         <>
           {renderCurrentWeather()}
-          <h2>El tiempo en {value}, a 5 días:</h2>
+          <h2 style={{ color: isDay ? 'black' : 'white' }}>El tiempo en {value}, a 5 días:</h2>
           {renderWeatherTable()}
         </>
       )}
