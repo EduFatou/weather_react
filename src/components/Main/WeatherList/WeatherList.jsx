@@ -38,7 +38,7 @@ import { Line, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } from 'chart.js';
 import clearDay from '../../../assets/clearDay.jpg';
 import clearNight from '../../../assets/clearNight.jpg';
-import clearSunset from '../../../assets/clearSunset.mp4';
+import clearSunset from '../../../assets/clearSunset.jpg';
 import rainyDay from '../../../assets/RainyDay2.jpg';
 import someCloudsDay from '../../../assets/someCloudsDay.jpg';
 import stormDay from '../../../assets/stormDay.jpg';
@@ -110,9 +110,8 @@ const WeatherList = () => {
     const sunsetTime = new Date(currentWeather.sys.sunset * 1000);
     console.log(sunsetTime)
     const isSunset = Math.abs(new Date() - sunsetTime) < 30 * 60 * 1000;
-    let newBackground = clearDay; // Fondo por defecto
+    let newBackground = clearDay;
 
-    // Ajusta el fondo según el clima y si es de día o de noche
     if (weatherId >= 200 && weatherId < 600) {
       newBackground = rainyDay;
     } else if (weatherId >= 600 && weatherId < 700) {
