@@ -449,7 +449,9 @@ const WeatherList = () => {
                       {groupedData[day].map((item, index) => (
                         <div className='sky-condition-icon' key={index}>
                           {getWeatherIcon(item.weather[0].id, true)}
+                          <div className="icon-hour">{formatTime(item.dt_txt)}</div>
                         </div>
+                        
                       ))}
                     </div>
                   </td>
