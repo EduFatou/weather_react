@@ -212,7 +212,7 @@ const WeatherList = () => {
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('es-ES', { hour: '2-digit'});
+    return date.toLocaleTimeString('es-ES', { hour: '2-digit' });
   };
 
   const getWindDirection = (deg) => {
@@ -221,23 +221,23 @@ const WeatherList = () => {
     if (deg > 67.5 && deg <= 112.5) return 'E';
     if (deg > 112.5 && deg <= 157.5) return 'SE';
     if (deg > 157.5 && deg <= 202.5) return 'S';
-    if (deg > 202.5 && deg <= 247.5) return 'SW';
-    if (deg > 247.5 && deg <= 292.5) return 'W';
-    if (deg > 292.5 && deg <= 337.5) return 'NW';
+    if (deg > 202.5 && deg <= 247.5) return 'SO';
+    if (deg > 247.5 && deg <= 292.5) return 'O';
+    if (deg > 292.5 && deg <= 337.5) return 'NO';
   };
 
   const WindDirectionArrow = ({ degree }) => {
     const adjustedDegree = (degree + 180) % 360;
     return (
       <div style={{ transform: `rotate(${adjustedDegree}deg)`, display: 'inline-block' }}>
-        <FaLongArrowAltUp size={20} />
+        <FaLongArrowAltUp size={22} />
       </div>
     );
   };
 
   const getRainInfo = (forecastData) => {
     const nextRainData = forecastData.slice(0, 8).map(item => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString('es-ES', { hour: '2-digit'}),
+      time: new Date(item.dt * 1000).toLocaleTimeString('es-ES', { hour: '2-digit' }),
       amount: item.rain && item.rain['3h'] ? item.rain['3h'] : 0
     }));
 
@@ -245,6 +245,15 @@ const WeatherList = () => {
   };
 
   const renderRainChart = (rainData) => {
+    const hasRain = rainData.some(item => item.amount > 0);
+
+    if (!hasRain) {
+      return (
+        <div className="no-rain-message">
+          No se espera lluvia en las próximas horas.
+        </div>
+      );
+    }
     const chartData = {
       labels: rainData.map(item => item.time),
       datasets: [
@@ -267,7 +276,7 @@ const WeatherList = () => {
         },
         title: {
           display: true,
-          text: 'Precipitación en las próximas horas',
+          text: 'Lluvia en las próximas horas',
         },
       },
       scales: {
@@ -290,7 +299,7 @@ const WeatherList = () => {
     };
 
     return (
-      <div className="chart-container" style={{ height: '170px' }}>
+      <div className="chart-container">
         <Bar data={chartData} options={chartOptions} />
       </div>
     );
@@ -392,7 +401,7 @@ const WeatherList = () => {
               display: false
             },
             min: 0,
-            max: 100
+            max: 50
           }
         }
       };
