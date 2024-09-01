@@ -124,8 +124,8 @@ const WeatherList = () => {
     } else if (weatherId > 800) {
       newBackground = isDay ? someCloudsDay : clearNight;
     }
-    if (isSunset && isDay) {
-      newBackground = '/src/assets/clearSunset.mp4'; // Set to your video
+    if (isSunset) {
+      newBackground = clearSunset;
     }
 
     document.body.style.backgroundImage = `url(${newBackground})`;
