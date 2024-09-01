@@ -48,7 +48,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 const apiKey = import.meta.env.VITE_SOME_VALUE;
 
 const WeatherList = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('Sevilla');
   const [info, setInfo] = useState([]);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [lat, setLat] = useState(null);
