@@ -34,10 +34,10 @@ import {
   WiSleet
 } from "react-icons/wi";
 import { FaLongArrowAltUp } from "react-icons/fa";
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const apiKey = import.meta.env.VITE_SOME_VALUE;
 
@@ -114,9 +114,9 @@ const WeatherList = () => {
         return <WiLightning />;
       case id >= 220 && id < 300:
         return <WiStormShowers />;
-      
+
       // Group 3xx: Drizzle
-      case id === 300: 
+      case id === 300:
         return <WiSprinkle />;
       case id === 301:
         return <WiSprinkle />;
@@ -134,7 +134,7 @@ const WeatherList = () => {
         return <WiRainWind />;
       case id === 321:
         return <WiShowers />;
-      
+
       // Group 5xx: Rain
       case id === 500:
         return isDay ? <WiDayRain /> : <WiNightRain />;
@@ -150,7 +150,7 @@ const WeatherList = () => {
         return <WiRainWind />;
       case id === 511:
         return <WiSnowflakeCold />;
-      
+
       // Group 6xx: Snow
       case id === 600:
       case id === 601:
@@ -165,7 +165,7 @@ const WeatherList = () => {
       case id === 621:
       case id === 622:
         return <WiRainMix />;
-      
+
       // Group 7xx: Atmosphere
       case id === 701:
       case id === 741:
@@ -183,11 +183,11 @@ const WeatherList = () => {
         return <WiWindy />;
       case id === 781:
         return <WiHurricane />;
-      
+
       // Group 800: Clear
       case id === 800:
         return isDay ? <WiDaySunny /> : <WiNightClear />;
-      
+
       // Group 80x: Clouds
       case id === 801:
         return isDay ? <WiDayCloudy /> : <WiNightAltCloudy />;
@@ -197,13 +197,13 @@ const WeatherList = () => {
         return isDay ? <WiCloudy /> : <WiNightCloudy />;
       case id === 804:
         return <WiCloudy />;
-      
+
       // Special cases
       case id === 906:
         return <WiHail />;
       case id === 957:
         return <WiRaindrops />;
-      
+
       // Default case
       default:
         return <WiNa />;
@@ -212,7 +212,7 @@ const WeatherList = () => {
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString('es-ES', { hour: '2-digit'});
   };
 
   const getWindDirection = (deg) => {
@@ -236,23 +236,72 @@ const WeatherList = () => {
   };
 
   const getRainInfo = (forecastData) => {
-    const nextRainData = forecastData.filter(item => item.rain && item.rain['3h']);
-    if (nextRainData.length > 0) {
-      const rainInfo = nextRainData.map(item => ({
-        time: new Date(item.dt * 1000).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-        amount: item.rain['3h']
-      }));
-      return rainInfo.map(info => `${info.time}: ${info.amount} mm`).join(', ');
-    }
-    return "No se espera lluvia en las próximas horas";
+    const nextRainData = forecastData.slice(0, 8).map(item => ({
+      time: new Date(item.dt * 1000).toLocaleTimeString('es-ES', { hour: '2-digit'}),
+      amount: item.rain && item.rain['3h'] ? item.rain['3h'] : 0
+    }));
+
+    return nextRainData;
   };
 
+  const renderRainChart = (rainData) => {
+    const chartData = {
+      labels: rainData.map(item => item.time),
+      datasets: [
+        {
+          label: 'Precipitación (mm)',
+          data: rainData.map(item => item.amount),
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          borderColor: 'rgb(53, 162, 235)',
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: 'Precipitación en las próximas horas',
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'mm',
+          },
+        },
+      },
+    };
+
+    return (
+      <div className="chart-container" style={{ height: '170px' }}>
+        <Bar data={chartData} options={chartOptions} />
+      </div>
+    );
+  };
 
   const renderCurrentWeather = () => {
     if (!currentWeather || info.length === 0) return null;
 
     const { name, main, wind, weather, clouds } = currentWeather;
     const isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
+    const rainData = getRainInfo(info);
 
     return (
       <div className="current-weather">
@@ -261,8 +310,8 @@ const WeatherList = () => {
           <div className="weather-icon">
             {getWeatherIcon(weather[0].id, isDay)}
           </div>
-          <p className="current-temp">{main.temp.toFixed(1)}°C</p>
-          <p className="feels-like">Sensación térmica: {main.feels_like.toFixed(1)}°C</p>
+          <p className="current-temp">{Math.round(main.temp)}°</p>
+          <p className="feels-like">Sensación térmica: {main.feels_like.toFixed(1)}°</p>
           <p className="current-wind">
             Viento: {(wind.speed * 3.6).toFixed(1)} km/h
             <span className="wind-direction">
@@ -273,15 +322,13 @@ const WeatherList = () => {
         <div className="right-section">
           <p className="weather-description">{weather[0].description.charAt(0).toUpperCase() + weather[0].description.slice(1)}</p>
           <p className="cloudiness">Nubosidad: {clouds.all}%</p>
-          <p className="rain-info">Lluvia: {getRainInfo(info)}</p>
-          {/* <p className="temp-range">
-            Máx: {main.temp_max.toFixed(1)}°C | Mín: {main.temp_min.toFixed(1)}°C
-          </p> */}
+          <div className="rain-info">
+            {renderRainChart(rainData)}
+          </div>
         </div>
       </div>
     );
   };
-
   const renderWeatherTable = () => {
     const groupedData = groupByDay(info);
     const days = Object.keys(groupedData);
@@ -337,13 +384,13 @@ const WeatherList = () => {
         scales: {
           x: {
             grid: {
-                display: false
+              display: false
             }
-        },
+          },
           y: {
             grid: {
               display: false
-          },
+            },
             min: 0,
             max: 100
           }
@@ -400,13 +447,13 @@ const WeatherList = () => {
         scales: {
           x: {
             grid: {
-                display: false
+              display: false
             }
-        },
+          },
           y: {
             grid: {
               display: false
-          },
+            },
             min: 0,
             max: 100
           }
@@ -433,7 +480,7 @@ const WeatherList = () => {
                     <th key={day}>
                       <div>{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
                       <div>
-                        Max: {max}°C | Min: {min}°C
+                        Max: {Math.round(max)}° | Min: {Math.round(min)}°
                       </div>
                     </th>
                   );
@@ -448,7 +495,9 @@ const WeatherList = () => {
                     <div className="sky-conditions-container">
                       {groupedData[day].map((item, index) => (
                         <div className='sky-condition-icon' key={index}>
+                          <div className="icon-temp">{Math.round(item.main.temp)}°</div>
                           {getWeatherIcon(item.weather[0].id, true)}
+                          <div className="icon-hour">{formatTime(item.dt_txt)}</div>
                         </div>
                       ))}
                     </div>
