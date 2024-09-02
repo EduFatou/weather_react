@@ -53,8 +53,6 @@ const WeatherList = () => {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
-  const [background, setBackground] = useState(null);
-  const isDay = new Date().getHours() >= 6 && new Date().getHours() < 20;
 
   const locationFound = () => {
     const success = (position) => {
@@ -316,24 +314,32 @@ const WeatherList = () => {
         title: {
           display: true,
           text: 'Lluvia en las próximas horas',
+          color: "white",
         },
       },
       scales: {
         x: {
           grid: {
-            display: false
+            display: false,
+          },
+          ticks: {
+            color: 'white'
+          },
+          border: {
+            color: 'white'
           }
         },
         y: {
           grid: {
+            display: false,
+          },
+          ticks: {
+            color: 'white'
+          },
+          border: {
             display: false
-          },
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'mm',
-          },
-        },
+          }
+        }
       },
     };
 
@@ -421,6 +427,7 @@ const WeatherList = () => {
             display: false,
           },
           tooltip: {
+            intersect: false,
             callbacks: {
               afterBody: function (context) {
                 const dataIndex = context[0].dataIndex;
@@ -433,11 +440,24 @@ const WeatherList = () => {
         scales: {
           x: {
             grid: {
-              display: false
+              display: false,
+            },
+            ticks: {
+              color: 'white'
+            },
+            border: {
+              color: 'white'
             }
           },
           y: {
             grid: {
+              display: false,
+            },
+            ticks: {
+              color: 'white',
+              precision: 0
+            },
+            border: {
               display: false
             }
           }
@@ -482,6 +502,7 @@ const WeatherList = () => {
             display: false,
           },
           tooltip: {
+            intersect: false,
             callbacks: {
               afterBody: function (context) {
                 const dataIndex = context[0].dataIndex;
@@ -492,17 +513,31 @@ const WeatherList = () => {
           }
         },
         scales: {
-          x: {
+            x: {
             grid: {
-              display: false
+              display: false,
+            },
+            ticks: {
+              color: 'white'
+            },
+            border: {
+              color: 'white'
             }
           },
           y: {
             grid: {
+              display: false,
+            },
+            ticks: {
+              color: 'white',
+              precision: 0,
+              stepSize: 10
+            },
+            border: {
               display: false
             },
             min: 0,
-            max: 50
+            max:50
           }
         }
       };
@@ -596,7 +631,7 @@ const WeatherList = () => {
 
   return (
     <section className="main-container">
-      <h1 style={{ color: isDay ? 'black' : 'white' }}>Easy Forecast</h1>
+      <h1 className='title'>Easy Forecast</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" name="city" placeholder='Escribe la ubicación' />
         <button>Buscar</button>
@@ -605,7 +640,7 @@ const WeatherList = () => {
       {info.length !== 0 && (
         <>
           {renderCurrentWeather()}
-          <h2 style={{ color: isDay ? 'black' : 'white' }}>El tiempo en {value}, a 5 días:</h2>
+          <h2 className='forecast-title'>El tiempo en {value}, a 5 días:</h2>
           {renderWeatherTable()}
         </>
       )}
