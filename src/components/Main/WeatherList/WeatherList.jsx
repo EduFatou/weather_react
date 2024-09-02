@@ -103,11 +103,14 @@ const WeatherList = () => {
   }, [lat, long]);
 
   const updateBackground = (currentWeather) => {
-    const isDay = new Date().getHours() >= 6 && new Date().getHours() < 20;
-    const weatherId = currentWeather.weather[0].id;
+    const currentTime = new Date();
+    const sunriseTime = new Date(currentWeather.sys.sunrise * 1000);
     const sunsetTime = new Date(currentWeather.sys.sunset * 1000);
+    const isDay = currentTime >= sunriseTime && currentTime < sunsetTime;
+    const weatherId = currentWeather.weather[0].id;
     console.log(sunsetTime)
-    const isSunset = Math.abs(new Date() - sunsetTime) < 30 * 60 * 1000;
+    const isSunset = Math.abs(currentTime - sunsetTime) < 60 * 60 * 1000;
+    console.log(isSunset)
     let newBackground = clearDay;
 
     if (weatherId >= 200 && weatherId < 600) {
@@ -121,7 +124,7 @@ const WeatherList = () => {
     } else if (weatherId > 800) {
       newBackground = isDay ? stormDay : clearNight;
     }
-    if (isSunset) {
+    if (isSunset && isDay) {
       newBackground = clearSunset;
     }
 
