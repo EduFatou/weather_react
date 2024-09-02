@@ -7,7 +7,7 @@ Esta es una aplicación de pronóstico del tiempo que utiliza la API de OpenWeat
 - Buscar pronóstico del tiempo por nombre de ciudad.
 - Utilizar la ubicación actual del usuario para obtener el pronóstico del tiempo.
 - Mostrar la temperatura, sensación térmica, humedad, velocidad y dirección del viento, y visibilidad.
-- Diseño responsive y atractivo con fondos dinámicos.
+- Diseño responsive y atractivo con fondos dinámicos., que cambian según el clima y la hora del día.
 
 ## Requisitos
 
