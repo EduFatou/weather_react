@@ -48,7 +48,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 const apiKey = import.meta.env.VITE_SOME_VALUE;
 
 const WeatherList = () => {
-  const [value, setValue] = useState('Sevilla');
+  const [value, setValue] = useState('');
   const [info, setInfo] = useState([]);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [lat, setLat] = useState(null);
@@ -119,7 +119,7 @@ const WeatherList = () => {
     } else if (weatherId === 800) {
       newBackground = isDay ? clearDay : clearNight;
     } else if (weatherId > 800) {
-      newBackground = isDay ? someCloudsDay : clearNight;
+      newBackground = isDay ? stormDay : clearNight;
     }
     if (isSunset) {
       newBackground = clearSunset;
