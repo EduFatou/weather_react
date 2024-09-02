@@ -80,6 +80,7 @@ h2 {
   border-radius: 8px;
   overflow: hidden;
   z-index: 1;
+  margin-bottom: 15px;
 }
 
 .weather-card::before {
