@@ -363,7 +363,7 @@ const WeatherList = () => {
     return (
       <div className="current-weather">
         <div className="left-section">
-          <h2>{name}</h2>
+          <h2>{value.charAt(0).toUpperCase()+ value.slice(1)}</h2>
           <div className="weather-icon">
             {getWeatherIcon(weather[0].id, isDay)}
           </div>
