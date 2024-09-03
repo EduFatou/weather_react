@@ -316,7 +316,7 @@ const WeatherList = () => {
         },
         title: {
           display: true,
-          text: 'Lluvia en las próximas horas',
+          text: 'Lluvia (mm) en las próximas horas',
           color: "white",
         },
       },
@@ -367,8 +367,8 @@ const WeatherList = () => {
           <div className="weather-icon">
             {getWeatherIcon(weather[0].id, isDay)}
           </div>
-          <p className="current-temp">{Math.round(main.temp)}°</p>
-          <p className="feels-like">Sensación térmica: {main.feels_like.toFixed(1)}°</p>
+          <p className="current-temp">{Math.round(main.temp)}°C</p>
+          <p className="feels-like">Sensación térmica: {Math.round(main.feels_like)}°</p>
           <p className="current-wind">
             Viento: {(wind.speed * 3.6).toFixed(1)} km/h
             <span className="wind-direction">
@@ -468,7 +468,7 @@ const WeatherList = () => {
       };
 
       return (
-        <div className="chart-container">
+        <div className="forecast-chart-container">
           <Line data={chartData} options={chartOptions} />
         </div>
       );
@@ -546,7 +546,7 @@ const WeatherList = () => {
       };
 
       return (
-        <div className="chart-container">
+        <div className="forecast-chart-container">
           <Line data={chartData} options={chartOptions} />
         </div>
       );
@@ -558,7 +558,7 @@ const WeatherList = () => {
           <table className="weather-table">
             <thead>
               <tr>
-                <th></th>
+                {/* <th></th> */}
                 {validDays.map(day => {
                   const { max, min } = getMaxMinTemp(groupedData[day]);
                   return (
@@ -574,15 +574,15 @@ const WeatherList = () => {
             </thead>
             <tbody>
               <tr>
-                <td>Nubosidad</td>
+                {/* <td>Nubosidad</td> */}
                 {validDays.map(day => (
                   <td key={day}>
                     <div className="sky-conditions-container">
                       {groupedData[day].map((item, index) => (
                         <div className='sky-condition-icon' key={index}>
-                          <div className="icon-temp">{Math.round(item.main.temp)}°</div>
-                          {getWeatherIcon(item.weather[0].id, true)}
                           <div className="icon-hour">{formatTime(item.dt_txt)}</div>
+                          {getWeatherIcon(item.weather[0].id, true)}
+                          <div className="icon-temp">{Math.round(item.main.temp)}°</div>
                         </div>
                       ))}
                     </div>
@@ -590,7 +590,7 @@ const WeatherList = () => {
                 ))}
               </tr>
               <tr>
-                <td><p className='temp'>Temperatura</p>°C{/*y <p className='humidity'>Humedad</p>*/}</td>
+                {/* <td><p className='temp'>Temperatura</p>°Cy <p className='humidity'>Humedad</p></td> */}
                 {validDays.map(day => (
                   <td key={day}>
                     {renderTempHumidityChart(groupedData[day])}
@@ -598,7 +598,7 @@ const WeatherList = () => {
                 ))}
               </tr>
               <tr>
-                <td><p className='wind'>Viento</p>y<p className='gust'>Rachas</p></td>
+                {/* <td><p className='wind'>Viento</p>y<p className='gust'>Rachas</p></td> */}
                 {validDays.map(day => (
                   <td key={day}>
                     {renderWindChart(groupedData[day])}
@@ -606,7 +606,7 @@ const WeatherList = () => {
                 ))}
               </tr>
               <tr>
-                <td>Dirección</td>
+                {/* <td>Dirección</td> */}
                 {validDays.map(day => (
                   <td key={day}>
                     <div className="wind-direction-icons">

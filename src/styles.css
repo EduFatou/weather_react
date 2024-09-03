@@ -122,6 +122,13 @@ h2 {
 
 .chart-container {
   height: auto;
+  width: 150px;
+  margin-top: 40px;
+  margin-bottom: 5px;
+}
+
+.forecast-chart-container {
+  height: auto;
   margin-bottom: 5px;
 }
 
@@ -132,8 +139,8 @@ h2 {
 }
 
 .sky-condition-icon {
-  height: 80px;
-  font-size: 2.5rem;
+  height: 100px;
+  font-size: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -144,16 +151,17 @@ h2 {
 }
 
 .icon-temp {
-  position: absolute;
-  top: 0;
+  margin-bottom: 7px;
   font-size: 0.8rem;
   font-weight: bold;
   color: #f2f2f2;
+  padding: 5px;
 }
 
 .icon-hour {
   font-size: 0.8rem;
   color: #f2f2f2;
+  padding: 5px;
 }
 
 .wind-direction-icons {
@@ -170,7 +178,7 @@ h2 {
 .current-weather {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   padding: 20px;
   border-radius: 10px;
@@ -200,15 +208,21 @@ h2 {
   width: 100%;
 }
 
+.right-section {
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
 .weather-icon {
   font-size: 4rem;
+  margin: -10px;
   color: #f2f2f2;
 }
 
 .current-temp {
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: #f2f2f2;
 }
 
@@ -294,6 +308,10 @@ h2 {
   .wind-direction {
     margin-left: 20px;
     margin-top: 0;
+  }
+
+  .chart-container {
+    width: auto;
   }
 }
 
