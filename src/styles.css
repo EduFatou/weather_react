@@ -81,6 +81,7 @@ h2 {
   overflow: hidden;
   z-index: 1;
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .weather-card::before {
@@ -109,7 +110,7 @@ h2 {
 .weather-table th,
 .weather-table td {
   padding: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.132);
+  /* border: 1px solid rgba(0, 0, 0, 0.044); */
   color: #f2f2f2;
 }
 

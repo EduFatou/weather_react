@@ -108,6 +108,7 @@ const WeatherList = () => {
     const sunsetTime = new Date(currentWeather.sys.sunset * 1000);
     const isDay = currentTime >= sunriseTime && currentTime < sunsetTime;
     const weatherId = currentWeather.weather[0].id;
+    console.log(weatherId)
     console.log(sunsetTime)
     const isSunset = Math.abs(currentTime - sunsetTime) < 60 * 60 * 1000;
     console.log(isSunset)
@@ -115,13 +116,17 @@ const WeatherList = () => {
 
     if (weatherId >= 200 && weatherId < 600) {
       newBackground = rainyDay;
-    } else if (weatherId >= 600 && weatherId < 700) {
+    }
+    if (weatherId === 801 || weatherId === 802) {
       newBackground = isDay ? someCloudsDay : clearNight;
-    } else if (weatherId >= 700 && weatherId < 800) {
+    }
+    if (weatherId >= 700 && weatherId < 800) {
       newBackground = stormDay;
-    } else if (weatherId === 800) {
+    }
+    if (weatherId === 800) {
       newBackground = isDay ? clearDay : clearNight;
-    } else if (weatherId > 800) {
+    }
+    if (weatherId > 802) {
       newBackground = isDay ? stormDay : clearNight;
     }
     if (isSunset && isDay) {
@@ -356,7 +361,7 @@ const WeatherList = () => {
   const renderCurrentWeather = () => {
     if (!currentWeather || info.length === 0) return null;
 
-    const { name, main, wind, weather, clouds } = currentWeather;
+    const { main, wind, weather, clouds } = currentWeather;
     const isDay = new Date().getHours() >= 6 && new Date().getHours() < 20;
     const rainData = getRainInfo(info);
 
