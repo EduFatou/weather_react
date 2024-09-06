@@ -15,7 +15,7 @@ body {
   text-align: center;
   background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-image: url(./assets/clearDay.jpg);
 }
 
@@ -311,7 +311,7 @@ h2 {
 /* Media Queries */
 @media screen and (min-width: 768px) {
   .main-container {
-    width: 90%;
+    width: 50%;
   }
 
   form {
@@ -350,16 +350,16 @@ h2 {
   }
 
   .chart-container {
-    width: auto;
+    width: 100%;
   }
   .table-column {
-    min-width: 500px;
+    min-width: 100%;
   }
 }
 
 @media screen and (min-width: 1024px) {
   .main-container {
-    width: 80%;
+    width: 40%;
   }
 
   .weather-card {

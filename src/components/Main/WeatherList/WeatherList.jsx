@@ -44,13 +44,17 @@ import rainyNight from '../../../assets/rainyNight.jpg';
 import someCloudsDay from '../../../assets/someCloudsDay.jpg';
 import cloudyNight from '../../../assets/cloudyNight.jpg';
 import stormDay from '../../../assets/stormDay.jpg';
+import littleClouds from '../../../assets/littleClouds.jpg';
+import thunderstorm from '../../../assets/thunderstorm.jpg';
+import lightRain from '../../../assets/lightRain.jpg';
+import someMoreClouds from '../../../assets/someMoreClouds.jpg';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const apiKey = import.meta.env.VITE_SOME_VALUE;
 
 const WeatherList = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('Madrid');
   const [info, setInfo] = useState([]);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [lat, setLat] = useState(null);
@@ -116,29 +120,52 @@ const WeatherList = () => {
     console.log(isSunset)
     let newBackground = clearDay;
 
-    if (weatherId >= 200 && weatherId < 600) {
+    // Thunderstorm
+    if (weatherId >= 200 && weatherId < 300) {
+      newBackground = thunderstorm;
+    }
+    // Drizzle and Light Rain
+    else if ((weatherId >= 300 && weatherId < 400) || (weatherId >= 500 && weatherId <= 504)) {
+      newBackground = isDay ? lightRain : rainyNight;
+    }
+    // Heavy Rain
+    else if (weatherId >= 505 && weatherId < 600) {
       newBackground = isDay ? rainyDay : rainyNight;
     }
-    if (weatherId === 801 || weatherId === 802) {
+    // Snow - keep existing logic
+    else if (weatherId >= 600 && weatherId < 700) {
       newBackground = isDay ? someCloudsDay : cloudyNight;
     }
-    if (weatherId >= 700 && weatherId < 800) {
-      newBackground = stormDay;
+    // Atmosphere conditions (fog, mist, etc.)
+    else if (weatherId >= 700 && weatherId < 800) {
+      newBackground = someMoreClouds;
     }
-    if (weatherId === 800) {
-      newBackground = isDay ? clearDay : clearNight;
+    // Clear sky
+    else if (weatherId === 800) {
+      if (isSunset) {
+        newBackground = clearSunset;
+      } else {
+        newBackground = isDay ? clearDay : clearNight;
+      }
     }
-    if (weatherId > 802) {
+    // Few clouds
+    else if (weatherId === 801) {
+      newBackground = littleClouds;
+    }
+    // Scattered clouds
+    else if (weatherId === 802) {
+      newBackground = someCloudsDay;
+    }
+    // Broken or overcast clouds
+    else if (weatherId >= 803) {
       newBackground = isDay ? stormDay : cloudyNight;
-    }
-    if (isSunset && isDay) {
-      newBackground = clearSunset;
     }
 
     document.body.style.backgroundImage = `url(${newBackground})`;
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
-    document.body.style.minHeight = '100vh';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
   };
   
   const groupByDay = (data) => {
