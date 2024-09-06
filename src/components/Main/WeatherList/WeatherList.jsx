@@ -40,7 +40,9 @@ import clearDay from '../../../assets/clearDay.jpg';
 import clearNight from '../../../assets/clearNight.jpg';
 import clearSunset from '../../../assets/clearSunset.jpg';
 import rainyDay from '../../../assets/RainyDay2.jpg';
+import rainyNight from '../../../assets/rainyNight.jpg';
 import someCloudsDay from '../../../assets/someCloudsDay.jpg';
+import cloudyNight from '../../../assets/cloudyNight.jpg';
 import stormDay from '../../../assets/stormDay.jpg';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
@@ -115,10 +117,10 @@ const WeatherList = () => {
     let newBackground = clearDay;
 
     if (weatherId >= 200 && weatherId < 600) {
-      newBackground = rainyDay;
+      newBackground = isDay ? rainyDay : rainyNight;
     }
     if (weatherId === 801 || weatherId === 802) {
-      newBackground = isDay ? someCloudsDay : clearNight;
+      newBackground = isDay ? someCloudsDay : cloudyNight;
     }
     if (weatherId >= 700 && weatherId < 800) {
       newBackground = stormDay;
@@ -127,7 +129,7 @@ const WeatherList = () => {
       newBackground = isDay ? clearDay : clearNight;
     }
     if (weatherId > 802) {
-      newBackground = isDay ? stormDay : clearNight;
+      newBackground = isDay ? stormDay : cloudyNight;
     }
     if (isSunset && isDay) {
       newBackground = clearSunset;
@@ -560,72 +562,41 @@ const WeatherList = () => {
     return (
       <div className="weather-card">
         <div className="table-container">
-          <table className="weather-table">
-            <thead>
-              <tr>
-                {/* <th></th> */}
-                {validDays.map(day => {
-                  const { max, min } = getMaxMinTemp(groupedData[day]);
-                  return (
-                    <th key={day}>
-                      <div>{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
-                      <div>
-                        Max: {Math.round(max)}° | Min: {Math.round(min)}°
-                      </div>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {/* <td>Nubosidad</td> */}
-                {validDays.map(day => (
-                  <td key={day}>
-                    <div className="sky-conditions-container">
-                      {groupedData[day].map((item, index) => (
-                        <div className='sky-condition-icon' key={index}>
-                          <div className="icon-hour">{formatTime(item.dt_txt)}</div>
-                          {getWeatherIcon(item.weather[0].id, true)}
-                          <div className="icon-temp">{Math.round(item.main.temp)}°</div>
-                        </div>
-                      ))}
+          {validDays.map(day => {
+            const { max, min } = getMaxMinTemp(groupedData[day]);
+            return (
+              <div key={day} className="table-column">
+                <div className="column-header">
+                  <div>{new Date(day).toLocaleDateString('es-ES', { weekday: 'long', month: '2-digit', day: '2-digit' })}</div>
+                  <div>
+                    Max: {Math.round(max)}° | Min: {Math.round(min)}°
+                  </div>
+                </div>
+                <div className="sky-conditions-container">
+                  {groupedData[day].map((item, index) => (
+                    <div className='sky-condition-icon' key={index}>
+                      <div className="icon-hour">{formatTime(item.dt_txt)}</div>
+                      {getWeatherIcon(item.weather[0].id, true)}
+                      <div className="icon-temp">{Math.round(item.main.temp)}°</div>
                     </div>
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                {/* <td><p className='temp'>Temperatura</p>°Cy <p className='humidity'>Humedad</p></td> */}
-                {validDays.map(day => (
-                  <td key={day}>
-                    {renderTempHumidityChart(groupedData[day])}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                {/* <td><p className='wind'>Viento</p>y<p className='gust'>Rachas</p></td> */}
-                {validDays.map(day => (
-                  <td key={day}>
-                    {renderWindChart(groupedData[day])}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                {/* <td>Dirección</td> */}
-                {validDays.map(day => (
-                  <td key={day}>
-                    <div className="wind-direction-icons">
-                      {groupedData[day].map((item, index) => (
-                        <div key={index} title={getWindDirection(item.wind.deg)}>
-                          <WindDirectionArrow degree={item.wind.deg} />
-                        </div>
-                      ))}
+                  ))}
+                </div>
+                <div className="forecast-chart-container">
+                  {renderTempHumidityChart(groupedData[day])}
+                </div>
+                <div className="forecast-chart-container">
+                  {renderWindChart(groupedData[day])}
+                </div>
+                <div className="wind-direction-icons">
+                  {groupedData[day].map((item, index) => (
+                    <div key={index} title={getWindDirection(item.wind.deg)}>
+                      <WindDirectionArrow degree={item.wind.deg} />
                     </div>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     );

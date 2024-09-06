@@ -99,6 +99,8 @@ h2 {
 .table-container {
   width: 100%;
   overflow-x: auto;
+  display: flex;
+  scroll-snap-type: x mandatory;
 }
 
 .weather-table {
@@ -133,10 +135,40 @@ h2 {
   margin-bottom: 5px;
 }
 
+.table-column {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  padding: 10px;
+  min-width: 300px;
+}
+
+.column-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
 .sky-conditions-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+}
+
+.sky-conditions-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.sky-conditions-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.sky-conditions-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
 }
 
 .sky-condition-icon {
@@ -147,9 +179,15 @@ h2 {
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: -10px;
   color: #f2f2f2;
+  flex: 0 0 auto;
+  margin-right: 15px;
 }
+
+.sky-condition-icon:last-child {
+  margin-right: 0;
+}
+
 
 .icon-temp {
   margin-bottom: 7px;
@@ -313,6 +351,9 @@ h2 {
 
   .chart-container {
     width: auto;
+  }
+  .table-column {
+    min-width: 500px;
   }
 }
 
