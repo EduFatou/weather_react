@@ -438,7 +438,7 @@ const WeatherList = () => {
         labels: dayData.map(item => formatTime(item.dt_txt)),
         datasets: [
           {
-            label: 'Temperature',
+            label: 'Temperatura',
             data: dayData.map(item => item.main.temp),
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -469,7 +469,7 @@ const WeatherList = () => {
               afterBody: function (context) {
                 const dataIndex = context[0].dataIndex;
                 const feelsLike = dayData[dataIndex].main.feels_like;
-                return `Feels like: ${feelsLike.toFixed(1)}°C`;
+                return `Sensación: ${feelsLike.toFixed(1)}°C`;
               }
             }
           }
@@ -513,7 +513,7 @@ const WeatherList = () => {
         labels: dayData.map(item => formatTime(item.dt_txt)),
         datasets: [
           {
-            label: 'Wind Speed',
+            label: 'Viento',
             data: dayData.map(item => item.wind.speed * 3.6),
             borderColor: 'rgb(75, 192, 192)',
             backgroundColor: 'rgba(75, 192, 192, 0.5)',
@@ -521,7 +521,7 @@ const WeatherList = () => {
             pointStyle: false
           },
           {
-            label: 'Wind Gust',
+            label: 'Rachas',
             data: dayData.map(item => item.wind.gust * 3.6),
             borderColor: 'rgb(255, 159, 64)',
             backgroundColor: 'rgba(255, 159, 64, 0.5)',
@@ -544,7 +544,7 @@ const WeatherList = () => {
               afterBody: function (context) {
                 const dataIndex = context[0].dataIndex;
                 const windDirection = getWindDirection(dayData[dataIndex].wind.deg);
-                return `Wind Direction: ${windDirection}`;
+                return `Dirección: ${windDirection}`;
               },
             }
           }
